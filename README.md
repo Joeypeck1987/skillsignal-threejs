@@ -2,6 +2,10 @@
 
 SkillSignal is a Three.js data visualization project built around a career-transition story: job-market data is loaded, transformed into structured skill-demand signals, and displayed as an interactive 3D chart.
 
+## Live Demo
+
+[View SkillSignal live](https://joeypeck1987.github.io/skillsignal-threejs/)
+
 ## What it shows
 
 - JavaScript data transformation
