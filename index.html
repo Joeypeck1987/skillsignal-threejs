@@ -19,7 +19,7 @@
       <div>
         <p class="eyebrow">Data Engineering Portfolio Project</p>
         <h1>SkillSignal</h1>
-        <p class="subtitle">3D Job Market Visualizer for technical skill demand</p>
+        <p class="subtitle">3D Job Market for in demand skills</p>
       </div>
       <div class="header-stats" aria-label="Project data summary">
         <span><strong id="jobCount">0</strong> jobs</span>
@@ -30,10 +30,57 @@
 
     <main class="layout">
       <section class="scene-card" aria-label="3D job skill demand chart">
+        <form class="filter-bar" id="filterForm" aria-label="Filter job market data">
+          <label>
+            Work mode
+            <select id="workModeFilter">
+              <option value="all">All</option>
+              <option value="remote">Remote</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="onsite">Onsite</option>
+            </select>
+          </label>
+
+          <label>
+            Level
+            <select id="levelFilter">
+              <option value="all">All</option>
+              <option value="junior">Junior</option>
+              <option value="mid">Mid-level</option>
+            </select>
+          </label>
+
+          <label>
+            Category
+            <select id="categoryFilter">
+              <option value="all">All</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Data Engineering">Data Engineering</option>
+            </select>
+          </label>
+
+          <label>
+            Salary range
+            <select id="salaryFilter">
+              <option value="all">All</option>
+              <option value="50000-75000">$50k–$75k</option>
+              <option value="75000-100000">$75k–$100k</option>
+              <option value="100000-150000">$100k+</option>
+            </select>
+          </label>
+
+          <label class="search-label">
+            Skill search
+            <input id="skillSearch" type="search" placeholder="Try SQL, Python, React..." />
+          </label>
+
+          <button type="reset">Reset</button>
+        </form>
+
         <div id="sceneContainer"></div>
         <div class="legend">
           <span>Bar height = skill frequency</span>
-          <span>Click a bar for job examples</span>
+          <span id="activeFilterSummary">Showing all sample jobs</span>
         </div>
       </section>
 
@@ -69,16 +116,16 @@
         <h3>Data pipeline</h3>
         <ol class="pipeline-list">
           <li>Load local <code>jobsData.json</code></li>
-          <li>Normalize role, location, salary, and skill fields</li>
-          <li>Count skill frequency across postings</li>
-          <li>Render transformed data as 3D bars</li>
+          <li>Filter raw records by work mode, level, category, salary, and skill</li>
+          <li>Clean and organize role, location, salary, and skill fields</li>
+          <li>Count skill frequency across matching postings</li>
+          <li>Display the skill counts as interactive bars</li>
         </ol>
       </aside>
     </main>
-
-    <footer>
-      Built as a career-transition project: JavaScript, Three.js, data transformation, interaction design, and data engineering thinking.
-    </footer>
+  <footer class="app-footer">
+      <p>Created by Joseph Peck</p>
+  </footer>
 
     <script type="module" src="src/app.js"></script>
   </body>

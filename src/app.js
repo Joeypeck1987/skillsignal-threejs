@@ -13,11 +13,19 @@ const jobList = document.querySelector('#jobList');
 const jobCount = document.querySelector('#jobCount');
 const skillCount = document.querySelector('#skillCount');
 const remotePercent = document.querySelector('#remotePercent');
+const filterForm = document.querySelector('#filterForm');
+const workModeFilter = document.querySelector('#workModeFilter');
+const levelFilter = document.querySelector('#levelFilter');
+const categoryFilter = document.querySelector('#categoryFilter');
+const salaryFilter = document.querySelector('#salaryFilter');
+const skillSearch = document.querySelector('#skillSearch');
+const activeFilterSummary = document.querySelector('#activeFilterSummary');
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const bars = [];
 let selectedBar = null;
+let allJobs = [];
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x071017);
@@ -67,11 +75,8 @@ grid.position.y = 0.01;
 scene.add(grid);
 
 async function init() {
-  const jobs = await loadJobs();
-  const skills = transformJobsToSkillSignals(jobs);
-  updateHeaderStats(jobs, skills);
-  renderBars(skills);
-  updatePanelWithOverview(jobs, skills);
+  allJobs = await loadJobs();
+  applyFilters();
   animate();
 }
 
@@ -81,6 +86,53 @@ async function loadJobs() {
     throw new Error('Could not load jobsData.json');
   }
   return response.json();
+}
+
+function applyFilters() {
+  const filteredJobs = filterJobs(allJobs);
+  const skills = transformJobsToSkillSignals(filteredJobs);
+  updateHeaderStats(filteredJobs, skills);
+  renderBars(skills);
+  updateActiveFilterSummary(filteredJobs, skills);
+  updatePanelWithOverview(filteredJobs, skills);
+}
+
+function filterJobs(jobs) {
+  const workMode = workModeFilter.value;
+  const level = levelFilter.value;
+  const category = categoryFilter.value;
+  const salaryRange = salaryFilter.value;
+  const searchTerm = skillSearch.value.trim().toLowerCase();
+
+  return jobs.filter((job) => {
+    const jobWorkMode = getWorkMode(job.location);
+    const averageJobSalary = getAverageJobSalary(job);
+    const matchesWorkMode = workMode === 'all' || jobWorkMode === workMode;
+    const matchesLevel = level === 'all' || job.level === level;
+    const matchesCategory = category === 'all' || job.category === category;
+    const matchesSalary = salaryRange === 'all' || salaryIsInRange(averageJobSalary, salaryRange);
+    const matchesSkill = !searchTerm || job.skills.some((skill) => skill.toLowerCase().includes(searchTerm));
+
+    return matchesWorkMode && matchesLevel && matchesCategory && matchesSalary && matchesSkill;
+  });
+}
+
+function getWorkMode(location) {
+  const normalizedLocation = location.toLowerCase();
+  if (normalizedLocation === 'remote') return 'remote';
+  if (normalizedLocation === 'hybrid') return 'hybrid';
+  return 'onsite';
+}
+
+function getAverageJobSalary(job) {
+  if (!Number.isFinite(job.salaryMin) || !Number.isFinite(job.salaryMax)) return null;
+  return (job.salaryMin + job.salaryMax) / 2;
+}
+
+function salaryIsInRange(value, range) {
+  if (!Number.isFinite(value)) return false;
+  const [min, max] = range.split('-').map(Number);
+  return value >= min && value <= max;
 }
 
 function transformJobsToSkillSignals(jobs) {
@@ -104,11 +156,12 @@ function transformJobsToSkillSignals(jobs) {
       signal.count += 1;
       signal.jobs.push(job);
 
-      if (job.location.toLowerCase() === 'remote') signal.remoteCount += 1;
-      if (job.level.toLowerCase() === 'junior') signal.juniorCount += 1;
+      if (getWorkMode(job.location) === 'remote') signal.remoteCount += 1;
+      if (job.level === 'junior') signal.juniorCount += 1;
 
-      if (Number.isFinite(job.salaryMin) && Number.isFinite(job.salaryMax)) {
-        signal.salaryTotal += (job.salaryMin + job.salaryMax) / 2;
+      const averageJobSalary = getAverageJobSalary(job);
+      if (Number.isFinite(averageJobSalary)) {
+        signal.salaryTotal += averageJobSalary;
         signal.salarySamples += 1;
       }
     }
@@ -124,19 +177,23 @@ function transformJobsToSkillSignals(jobs) {
 }
 
 function updateHeaderStats(jobs, skills) {
-  const remoteJobs = jobs.filter((job) => job.location.toLowerCase() === 'remote').length;
+  const remoteJobs = jobs.filter((job) => getWorkMode(job.location) === 'remote').length;
   jobCount.textContent = jobs.length;
   skillCount.textContent = skills.length;
-  remotePercent.textContent = `${Math.round((remoteJobs / jobs.length) * 100)}%`;
+  remotePercent.textContent = jobs.length ? `${Math.round((remoteJobs / jobs.length) * 100)}%` : '0%';
 }
 
 function renderBars(skills) {
+  clearBars();
+
+  if (!skills.length) return;
+
   const maxCount = Math.max(...skills.map((skill) => skill.count));
   const spacing = 2.3;
   const startX = -((skills.length - 1) * spacing) / 2;
 
   skills.forEach((skillSignal, index) => {
-    const height = THREE.MathUtils.mapLinear(skillSignal.count, 0, maxCount, 0, 9);
+    const height = THREE.MathUtils.mapLinear(skillSignal.count, 0, maxCount, 0.8, 9);
     const geometry = new THREE.BoxGeometry(1.2, height, 1.2);
     const material = new THREE.MeshStandardMaterial({
       color: new THREE.Color().setHSL(0.46 - index * 0.014, 0.72, 0.5),
@@ -163,11 +220,37 @@ function renderBars(skills) {
   });
 }
 
+function clearBars() {
+  selectedBar = null;
+
+  while (bars.length) {
+    const bar = bars.pop();
+    scene.remove(bar);
+    bar.geometry.dispose();
+    bar.material.dispose();
+  }
+}
+
+function updateActiveFilterSummary(jobs, skills) {
+  activeFilterSummary.textContent = `Showing ${jobs.length} jobs and ${skills.length} skill signals`;
+}
+
 function updatePanelWithOverview(jobs, skills) {
-  panelTitle.textContent = 'Skill demand overview';
-  panelDescription.textContent = 'This static dataset is transformed into skill-frequency signals, then rendered as interactive 3D bars. It is designed so a real job API can replace the local JSON later.';
+  if (!jobs.length) {
+    panelTitle.textContent = 'No matching jobs';
+    panelDescription.textContent = 'Try broadening the filters. The chart updates from the filtered dataset, so no bars appear when no job records match.';
+    mentionMetric.textContent = '—';
+    remoteMetric.textContent = '—';
+    juniorMetric.textContent = '—';
+    salaryMetric.textContent = '—';
+    jobList.innerHTML = '<li>No matching job records.</li>';
+    return;
+  }
+
+  panelTitle.textContent = 'Filtered skill demand overview';
+  panelDescription.textContent = 'The controls filter the raw job records first. Then the app recalculates skill frequency and redraws the 3D bars from the transformed dataset.';
   mentionMetric.textContent = skills[0]?.count ?? '—';
-  remoteMetric.textContent = `${jobs.filter((job) => job.location === 'Remote').length}`;
+  remoteMetric.textContent = `${jobs.filter((job) => getWorkMode(job.location) === 'remote').length}`;
   juniorMetric.textContent = `${jobs.filter((job) => job.level === 'junior').length}`;
   salaryMetric.textContent = formatSalary(averageSalary(jobs));
   jobList.innerHTML = skills.slice(0, 5).map((signal) => `<li><strong>${signal.skill}</strong> appears in ${signal.count} postings.</li>`).join('');
@@ -175,7 +258,7 @@ function updatePanelWithOverview(jobs, skills) {
 
 function updatePanelForSkill(skillSignal) {
   panelTitle.textContent = skillSignal.skill;
-  panelDescription.textContent = `${skillSignal.skill} appears across ${skillSignal.count} job postings in this sample dataset. This view connects raw job records to skill demand, remote availability, seniority, and salary range signals.`;
+  panelDescription.textContent = `${skillSignal.skill} appears across ${skillSignal.count} job postings in the currently filtered dataset.`;
   mentionMetric.textContent = skillSignal.count;
   remoteMetric.textContent = `${skillSignal.remoteCount}/${skillSignal.count}`;
   juniorMetric.textContent = `${skillSignal.juniorCount}/${skillSignal.count}`;
@@ -184,16 +267,16 @@ function updatePanelForSkill(skillSignal) {
   jobList.innerHTML = skillSignal.jobs
     .slice(0, 7)
     .map((job) => {
-      const salary = formatSalary((job.salaryMin + job.salaryMax) / 2);
-      return `<li><strong>${job.title}</strong><br>${job.company} · ${job.location} · ${job.level} · ${salary}</li>`;
+      const salary = formatSalary(getAverageJobSalary(job));
+      return `<li><strong>${job.title}</strong><br>${job.company} · ${job.location} · ${job.level} · ${job.category} · ${salary}</li>`;
     })
     .join('');
 }
 
 function averageSalary(jobs) {
   const salaryValues = jobs
-    .filter((job) => Number.isFinite(job.salaryMin) && Number.isFinite(job.salaryMax))
-    .map((job) => (job.salaryMin + job.salaryMax) / 2);
+    .map(getAverageJobSalary)
+    .filter(Number.isFinite);
 
   return salaryValues.reduce((sum, value) => sum + value, 0) / salaryValues.length;
 }
@@ -251,6 +334,11 @@ function animate() {
   labelRenderer.render(scene, camera);
 }
 
+filterForm.addEventListener('change', applyFilters);
+filterForm.addEventListener('input', applyFilters);
+filterForm.addEventListener('reset', () => {
+  window.setTimeout(applyFilters, 0);
+});
 renderer.domElement.addEventListener('pointermove', handlePointerMove);
 renderer.domElement.addEventListener('click', handleClick);
 window.addEventListener('resize', handleResize);

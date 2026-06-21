@@ -1,7 +1,7 @@
 {
   "name": "skillsignal-threejs",
   "version": "1.0.0",
-  "description": "SkillSignal — 3D Job Market Visualizer using Three.js and local JSON job-market data.",
+  "description": "SkillSignal — A Job Market Visualizer using Three.js and local job-market data.",
   "scripts": {
     "start": "python -m http.server 5173"
   },
