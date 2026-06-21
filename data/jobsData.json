@@ -1,0 +1,242 @@
+[
+  {
+    "title": "Junior Web Developer",
+    "company": "Northstar Digital",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Web Development",
+    "salaryMin": 55000,
+    "salaryMax": 72000,
+    "skills": ["JavaScript", "HTML", "CSS", "GitHub", "React"]
+  },
+  {
+    "title": "Data Engineering Apprentice",
+    "company": "SignalWorks Labs",
+    "location": "Austin, TX",
+    "level": "junior",
+    "category": "Data Engineering",
+    "salaryMin": 60000,
+    "salaryMax": 78000,
+    "skills": ["Python", "SQL", "ETL", "GitHub", "APIs"]
+  },
+  {
+    "title": "Frontend Developer",
+    "company": "BrightPath Media",
+    "location": "Hybrid",
+    "level": "junior",
+    "category": "Web Development",
+    "salaryMin": 62000,
+    "salaryMax": 82000,
+    "skills": ["JavaScript", "React", "CSS", "HTML", "APIs"]
+  },
+  {
+    "title": "Associate Data Analyst",
+    "company": "Mesa Insights",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Data Analytics",
+    "salaryMin": 52000,
+    "salaryMax": 68000,
+    "skills": ["SQL", "Python", "Excel", "Tableau", "Data Cleaning"]
+  },
+  {
+    "title": "Cloud Data Engineer",
+    "company": "OrbitLake Systems",
+    "location": "Dallas, TX",
+    "level": "mid",
+    "category": "Data Engineering",
+    "salaryMin": 92000,
+    "salaryMax": 125000,
+    "skills": ["Python", "SQL", "AWS", "ETL", "Airflow", "Data Modeling"]
+  },
+  {
+    "title": "React Developer",
+    "company": "LaunchGrid",
+    "location": "Remote",
+    "level": "mid",
+    "category": "Web Development",
+    "salaryMin": 85000,
+    "salaryMax": 115000,
+    "skills": ["React", "JavaScript", "TypeScript", "APIs", "GitHub"]
+  },
+  {
+    "title": "BI Developer",
+    "company": "Canyon Metrics",
+    "location": "Lubbock, TX",
+    "level": "mid",
+    "category": "Business Intelligence",
+    "salaryMin": 75000,
+    "salaryMax": 98000,
+    "skills": ["SQL", "Power BI", "Data Modeling", "Excel", "Python"]
+  },
+  {
+    "title": "Junior Data Engineer",
+    "company": "Pipeline Forge",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Data Engineering",
+    "salaryMin": 65000,
+    "salaryMax": 85000,
+    "skills": ["Python", "SQL", "ETL", "Docker", "APIs"]
+  },
+  {
+    "title": "Full Stack Developer",
+    "company": "PrismWeb",
+    "location": "Hybrid",
+    "level": "mid",
+    "category": "Full Stack",
+    "salaryMin": 88000,
+    "salaryMax": 118000,
+    "skills": ["JavaScript", "React", "Node.js", "SQL", "APIs", "AWS"]
+  },
+  {
+    "title": "Analytics Engineer",
+    "company": "Warehouse Logic",
+    "location": "Remote",
+    "level": "mid",
+    "category": "Data Engineering",
+    "salaryMin": 90000,
+    "salaryMax": 120000,
+    "skills": ["SQL", "dbt", "Python", "Data Modeling", "ETL"]
+  },
+  {
+    "title": "Entry Level Software Developer",
+    "company": "CodeRiver",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Software Development",
+    "salaryMin": 58000,
+    "salaryMax": 76000,
+    "skills": ["JavaScript", "Python", "GitHub", "HTML", "CSS"]
+  },
+  {
+    "title": "Data Pipeline Developer",
+    "company": "Atlas Data Co.",
+    "location": "Houston, TX",
+    "level": "mid",
+    "category": "Data Engineering",
+    "salaryMin": 98000,
+    "salaryMax": 132000,
+    "skills": ["Python", "SQL", "Airflow", "Docker", "AWS", "ETL"]
+  },
+  {
+    "title": "Junior Backend Developer",
+    "company": "API Foundry",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Backend Development",
+    "salaryMin": 64000,
+    "salaryMax": 84000,
+    "skills": ["Node.js", "JavaScript", "SQL", "APIs", "Docker"]
+  },
+  {
+    "title": "Reporting Analyst",
+    "company": "South Plains Reporting",
+    "location": "Lubbock, TX",
+    "level": "junior",
+    "category": "Data Analytics",
+    "salaryMin": 50000,
+    "salaryMax": 65000,
+    "skills": ["SQL", "Excel", "Power BI", "Data Cleaning"]
+  },
+  {
+    "title": "Cloud Support Developer",
+    "company": "Nimbus Stack",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Cloud Support",
+    "salaryMin": 62000,
+    "salaryMax": 82000,
+    "skills": ["AWS", "Python", "Linux", "APIs", "GitHub"]
+  },
+  {
+    "title": "ETL Developer",
+    "company": "FlowState Data",
+    "location": "Hybrid",
+    "level": "mid",
+    "category": "Data Engineering",
+    "salaryMin": 87000,
+    "salaryMax": 112000,
+    "skills": ["ETL", "SQL", "Python", "Data Cleaning", "Data Modeling"]
+  },
+  {
+    "title": "UI Developer",
+    "company": "Interface Studio",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Web Development",
+    "salaryMin": 57000,
+    "salaryMax": 74000,
+    "skills": ["HTML", "CSS", "JavaScript", "React", "Accessibility"]
+  },
+  {
+    "title": "Data Platform Associate",
+    "company": "StackBridge",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Data Engineering",
+    "salaryMin": 68000,
+    "salaryMax": 89000,
+    "skills": ["Python", "SQL", "Docker", "Linux", "GitHub"]
+  },
+  {
+    "title": "Web Data Visualization Developer",
+    "company": "ChartLab",
+    "location": "Remote",
+    "level": "mid",
+    "category": "Data Visualization",
+    "salaryMin": 82000,
+    "salaryMax": 108000,
+    "skills": ["JavaScript", "Three.js", "React", "APIs", "Data Modeling"]
+  },
+  {
+    "title": "Junior Cloud Data Analyst",
+    "company": "DataTrail",
+    "location": "Hybrid",
+    "level": "junior",
+    "category": "Data Analytics",
+    "salaryMin": 59000,
+    "salaryMax": 79000,
+    "skills": ["SQL", "Python", "AWS", "Tableau", "Excel"]
+  },
+  {
+    "title": "Operations Data Developer",
+    "company": "FreightFlow Analytics",
+    "location": "Dallas, TX",
+    "level": "mid",
+    "category": "Data Engineering",
+    "salaryMin": 82000,
+    "salaryMax": 110000,
+    "skills": ["SQL", "Python", "ETL", "APIs", "Power BI"]
+  },
+  {
+    "title": "Junior Full Stack Engineer",
+    "company": "RemoteCraft",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Full Stack",
+    "salaryMin": 70000,
+    "salaryMax": 90000,
+    "skills": ["JavaScript", "React", "Node.js", "SQL", "GitHub"]
+  },
+  {
+    "title": "Data Quality Analyst",
+    "company": "CleanRoom Data",
+    "location": "Remote",
+    "level": "junior",
+    "category": "Data Analytics",
+    "salaryMin": 56000,
+    "salaryMax": 73000,
+    "skills": ["SQL", "Data Cleaning", "Excel", "Python"]
+  },
+  {
+    "title": "Platform Integration Developer",
+    "company": "Connective Systems",
+    "location": "Hybrid",
+    "level": "mid",
+    "category": "Backend Development",
+    "salaryMin": 86000,
+    "salaryMax": 116000,
+    "skills": ["APIs", "Node.js", "JavaScript", "Docker", "AWS"]
+  }
+]

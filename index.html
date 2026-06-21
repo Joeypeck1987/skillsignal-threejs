@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillSignal — 3D Job Market Visualizer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Data Engineering Portfolio Project</p>
+        <h1>SkillSignal</h1>
+        <p class="subtitle">3D Job Market Visualizer for technical skill demand</p>
+      </div>
+      <div class="header-stats" aria-label="Project data summary">
+        <span><strong id="jobCount">0</strong> jobs</span>
+        <span><strong id="skillCount">0</strong> skills</span>
+        <span><strong id="remotePercent">0%</strong> remote</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="scene-card" aria-label="3D job skill demand chart">
+        <div id="sceneContainer"></div>
+        <div class="legend">
+          <span>Bar height = skill frequency</span>
+          <span>Click a bar for job examples</span>
+        </div>
+      </section>
+
+      <aside class="panel" aria-live="polite">
+        <p class="eyebrow">Selected Signal</p>
+        <h2 id="panelTitle">Choose a skill bar</h2>
+        <p id="panelDescription">Hover or click a bar to inspect demand, related roles, locations, and seniority level patterns.</p>
+
+        <div class="metric-grid">
+          <article>
+            <span class="metric-label">Mentions</span>
+            <strong id="mentionMetric">—</strong>
+          </article>
+          <article>
+            <span class="metric-label">Remote roles</span>
+            <strong id="remoteMetric">—</strong>
+          </article>
+          <article>
+            <span class="metric-label">Junior roles</span>
+            <strong id="juniorMetric">—</strong>
+          </article>
+          <article>
+            <span class="metric-label">Avg salary</span>
+            <strong id="salaryMetric">—</strong>
+          </article>
+        </div>
+
+        <h3>Matching job examples</h3>
+        <ul id="jobList" class="job-list">
+          <li>No skill selected yet.</li>
+        </ul>
+
+        <h3>Data pipeline</h3>
+        <ol class="pipeline-list">
+          <li>Load local <code>jobsData.json</code></li>
+          <li>Normalize role, location, salary, and skill fields</li>
+          <li>Count skill frequency across postings</li>
+          <li>Render transformed data as 3D bars</li>
+        </ol>
+      </aside>
+    </main>
+
+    <footer>
+      Built as a career-transition project: JavaScript, Three.js, data transformation, interaction design, and data engineering thinking.
+    </footer>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
