@@ -1,4 +1,4 @@
-# SkillSignal — 3D Job Market Visualizer
+# SkillSignal - 3D Job Market Visualizer
 
 SkillSignal is an interactive Three.js dashboard that visualizes skill demand from structured job-market-style data.
 
