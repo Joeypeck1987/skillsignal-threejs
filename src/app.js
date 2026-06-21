@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
+// DOM references for the dashboard controls, metrics, and details panel.
 const sceneContainer = document.querySelector('#sceneContainer');
 const panelTitle = document.querySelector('#panelTitle');
 const panelDescription = document.querySelector('#panelDescription');
@@ -21,6 +22,7 @@ const salaryFilter = document.querySelector('#salaryFilter');
 const skillSearch = document.querySelector('#skillSearch');
 const activeFilterSummary = document.querySelector('#activeFilterSummary');
 
+// Core Three.js objects used for rendering, camera control, and mouse picking.
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const bars = [];
@@ -84,12 +86,15 @@ const grid = new THREE.GridHelper(44, 22, 0x224457, 0x142c38);
 grid.position.y = 0.01;
 scene.add(grid);
 
+
+// Loads the dataset, applies the initial filters, and starts the render loop.
 async function init() {
   allJobs = await loadJobs();
   applyFilters();
   animate();
 }
 
+// Fetches the local JSON dataset. This can later be replaced with a real job API.
 async function loadJobs() {
   const response = await fetch('./data/jobsData.json');
   if (!response.ok) {
@@ -98,6 +103,7 @@ async function loadJobs() {
   return response.json();
 }
 
+// Main dashboard update function: filter records, transform them into skill signals, then refresh the UI.
 function applyFilters() {
   const filteredJobs = filterJobs(allJobs);
   const skills = transformJobsToSkillSignals(filteredJobs);
@@ -107,6 +113,7 @@ function applyFilters() {
   updatePanelWithOverview(filteredJobs, skills);
 }
 
+// Applies the selected dashboard controls to the raw job records.
 function filterJobs(jobs) {
   const workMode = workModeFilter.value;
   const level = levelFilter.value;
@@ -145,6 +152,8 @@ function salaryIsInRange(value, range) {
   return value >= min && value <= max;
 }
 
+
+// Groups job postings by skill and calculates demand metrics for each skill.
 function transformJobsToSkillSignals(jobs) {
   const skillMap = new Map();
 
@@ -193,6 +202,7 @@ function updateHeaderStats(jobs, skills) {
   remotePercent.textContent = jobs.length ? `${Math.round((remoteJobs / jobs.length) * 100)}%` : '0%';
 }
 
+// Rebuilds the 3D bar chart from the current filtered skill signals.
 function renderBars(skills) {
   clearBars();
 
@@ -224,7 +234,7 @@ function renderBars(skills) {
     bars.push(bar);
   });
 }
-
+// Clears the previous chart before drawing a new filtered result.
 function clearBars() {
   selectedBar = null;
   bars.length = 0;
@@ -251,6 +261,8 @@ function updateActiveFilterSummary(jobs, skills) {
   activeFilterSummary.textContent = `Showing ${jobs.length} jobs and ${skills.length} skill signals`;
 }
 
+// Shows a summary of the currently filtered dataset before a specific bar is selected.
+
 function updatePanelWithOverview(jobs, skills) {
   if (!jobs.length) {
     panelTitle.textContent = 'No matching jobs';
@@ -272,6 +284,7 @@ function updatePanelWithOverview(jobs, skills) {
   jobList.innerHTML = skills.slice(0, 5).map((signal) => `<li><strong>${signal.skill}</strong> appears in ${signal.count} postings.</li>`).join('');
 }
 
+// Updates the side panel with details for the clicked skill bar.
 function updatePanelForSkill(skillSignal) {
   panelTitle.textContent = skillSignal.skill;
   panelDescription.textContent = `${skillSignal.skill} appears across ${skillSignal.count} job postings in the currently filtered dataset.`;
@@ -338,6 +351,7 @@ function handleClick(event) {
   if (intersected) setSelectedBar(intersected);
 }
 
+// Uses raycasting to detect which 3D bar the user's pointer is over.
 function getIntersectedBar(event) {
   const bounds = renderer.domElement.getBoundingClientRect();
   pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
@@ -357,6 +371,7 @@ function handleResize() {
   labelRenderer.setSize(width, height);
 }
 
+// Continuous render loop for controls, WebGL scene, and label layer.
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
