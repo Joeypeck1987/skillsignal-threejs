@@ -24,12 +24,22 @@ const activeFilterSummary = document.querySelector('#activeFilterSummary');
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const bars = [];
+const chartGroup = new THREE.Group();
+
+const hoverLabelElement = document.createElement('div');
+hoverLabelElement.className = 'skill-label hover-label';
+hoverLabelElement.style.display = 'none';
+
+const hoverLabel = new CSS2DObject(hoverLabelElement);
+
 let selectedBar = null;
 let allJobs = [];
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x071017);
 scene.fog = new THREE.Fog(0x071017, 26, 70);
+scene.add(chartGroup);
+scene.add(hoverLabel);
 
 const camera = new THREE.PerspectiveCamera(55, sceneContainer.clientWidth / sceneContainer.clientHeight, 0.1, 1000);
 camera.position.set(8, 12, 20);
@@ -205,29 +215,35 @@ function renderBars(skills) {
     bar.position.set(startX + index * spacing, height / 2, 0);
     bar.castShadow = true;
     bar.receiveShadow = true;
-    bar.userData = skillSignal;
+    bar.userData = {
+        ...skillSignal,
+        barHeight: height
+      };
 
-    const labelElement = document.createElement('div');
-    labelElement.className = 'skill-label';
-    labelElement.textContent = skillSignal.skill;
-
-    const label = new CSS2DObject(labelElement);
-    label.position.set(0, height + 0.45, 0);
-    bar.add(label);
-
-    scene.add(bar);
+    chartGroup.add(bar);
     bars.push(bar);
   });
 }
 
 function clearBars() {
   selectedBar = null;
+  bars.length = 0;
+  hoverLabelElement.style.display = 'none';
 
-  while (bars.length) {
-    const bar = bars.pop();
-    scene.remove(bar);
-    bar.geometry.dispose();
-    bar.material.dispose();
+  while (chartGroup.children.length > 0) {
+    const object = chartGroup.children[0];
+
+    object.traverse((child) => {
+      if (child.geometry) {
+        child.geometry.dispose();
+      }
+
+      if (child.material) {
+        child.material.dispose();
+      }
+    });
+
+    chartGroup.remove(object);
   }
 }
 
@@ -301,6 +317,20 @@ function setSelectedBar(bar) {
 function handlePointerMove(event) {
   const intersected = getIntersectedBar(event);
   renderer.domElement.style.cursor = intersected ? 'pointer' : 'grab';
+
+  if (!intersected) {
+    hoverLabelElement.style.display = 'none';
+    return;
+  }
+
+  hoverLabelElement.textContent = intersected.userData.skill;
+  hoverLabelElement.style.display = 'block';
+
+  hoverLabel.position.set(
+    intersected.position.x,
+    intersected.userData.barHeight + 0.8,
+    intersected.position.z
+  );
 }
 
 function handleClick(event) {
